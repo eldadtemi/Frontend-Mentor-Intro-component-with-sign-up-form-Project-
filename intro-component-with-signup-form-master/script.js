@@ -1,4 +1,9 @@
 const form = document.getElementById('signup-form');
+const terms = document.querySelector('.terms');
+const successMessage = document.getElementById('success-message');
+const userFirstName = document.getElementById('user-first-name');
+const resetBtn = document.getElementById('reset-btn');
+
 const firstName = document.getElementById('first-name');
 const lastName = document.getElementById('last-name');
 const email = document.getElementById('email');
@@ -6,10 +11,24 @@ const password = document.getElementById('password');
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  validateInputs();
+  if (validateInputs()) {
+    userFirstName.textContent = firstName.value.trim();
+    form.classList.add('hidden');
+    terms.classList.add('hidden');
+    successMessage.classList.remove('hidden');
+  }
+});
+
+resetBtn.addEventListener('click', () => {
+  form.reset();
+  successMessage.classList.add('hidden');
+  form.classList.remove('hidden');
+  terms.classList.remove('hidden');
 });
 
 function validateInputs() {
+  let isValid = true;
+
   const firstNameVal = firstName.value.trim();
   const lastNameVal = lastName.value.trim();
   const emailVal = email.value.trim();
@@ -17,29 +36,36 @@ function validateInputs() {
 
   if (firstNameVal === '') {
     setError(firstName, 'First Name cannot be empty');
+    isValid = false;
   } else {
     clearError(firstName);
   }
 
   if (lastNameVal === '') {
     setError(lastName, 'Last Name cannot be empty');
+    isValid = false;
   } else {
     clearError(lastName);
   }
 
   if (emailVal === '') {
     setError(email, 'Email cannot be empty');
+    isValid = false;
   } else if (!isValidEmail(emailVal)) {
     setError(email, 'Looks like this is not an email');
+    isValid = false;
   } else {
     clearError(email);
   }
 
   if (passwordVal === '') {
     setError(password, 'Password cannot be empty');
+    isValid = false;
   } else {
     clearError(password);
   }
+
+  return isValid;
 }
 
 function setError(input, message) {
@@ -58,7 +84,6 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// Clear error state as the user types
 [firstName, lastName, email, password].forEach((input) => {
   input.addEventListener('input', () => clearError(input));
-});  
+});
