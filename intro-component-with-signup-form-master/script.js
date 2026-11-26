@@ -61,4 +61,4 @@ function isValidEmail(email) {
 // Clear error state as the user types
 [firstName, lastName, email, password].forEach((input) => {
   input.addEventListener('input', () => clearError(input));
-});
+});  
